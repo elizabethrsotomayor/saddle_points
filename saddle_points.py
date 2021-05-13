@@ -3,29 +3,13 @@ from typing import List, Dict
 
 def saddle_points(matrix: List) -> Dict[str, int]:
     """Return the row and column where a saddle point is present in a matrix."""
-    row_column = {"row": 0,
-                  "column": 0}
+    if len(set(map(len, matrix))) > 1:
+        raise ValueError('Irregular matrix')
 
-    max_rows = [max(j) for j in matrix]
-    # print(max_rows)
-
-    columns = []
-
-    for num in range(0, len(matrix)):
-        column = [row[num] for row in matrix]
-        columns.append(column)
-
-    print(columns)
-
-    # for num in range(0, len(matrix)): # columns
-    #     for value in matrix: # rows
-    #         print(value[num], value)
-
-    return row_column
-
-
-matrix = [[9, 8, 7], [5, 3, 2], [6, 6, 7]]
-print(saddle_points(matrix))  # should print {"row": 2, "column": 1} for value 5
-
-# It's called a "saddle point" because it is greater than or equal to every element in its row and
-# less than or equal to every element in its column.
+    tmatrix = list(zip(*matrix))  # transpose for easy column ref
+    points = []
+    for i, row in enumerate(matrix):
+        for j, x in enumerate(row):
+            if x == max(row) and x == min(tmatrix[j]):
+                points.append({"row": i + 1, "column": j + 1})
+    return points
